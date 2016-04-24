@@ -17,12 +17,13 @@ public class Game implements KeyListener {
 	private static int dim;
 	public static File resultFile;
 	public static int iterationCounter = 1;
+	
 
 	private Game(String fileName, int sizeOfBoard) {
 		dim = sizeOfBoard;
 		board = readFromFile(fileName);
 		resultFile = new File("Result.txt");
-		nextBoard = new boolean[dim][dim];
+		nextBoard = readFromFile(fileName);
 	}
 
 	public static void init(String fileName, int dim) {
@@ -59,7 +60,10 @@ public class Game implements KeyListener {
 
 		String content = "";
 
+		content += "Iteration number" + iterationCounter + "\n";
 		for (int i = 0; i < tab.length; i++) {
+			
+			
 			for (int j = 0; j < tab[i].length; j++) {
 
 				if (tab[i][j] == true)
@@ -71,8 +75,10 @@ public class Game implements KeyListener {
 			}
 			content += "\n";
 		}
+		
+		content += "\n";
 
-		try (FileOutputStream fop = new FileOutputStream(resultFile)) {
+		try (FileOutputStream fop = new FileOutputStream(resultFile, true)) {
 			byte[] contentInBytes = content.getBytes();
 
 			fop.write(contentInBytes);
@@ -93,30 +99,33 @@ public class Game implements KeyListener {
 	}
 
 	private static void runGame() {
-		int x=10;
-		while(x>0){
-			drawConsoleBoard();
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
+		int x=6;
+		while (x > 0) {
+			writeToFile(board);
+			System.out.println("Iteration numbe: "+iterationCounter);
+			drawConsoleBoard(board);
+			for (int i = 0; i < board.length; i++) {
+				for (int j = 0; j < board[i].length; j++) {
+					if (board[i][j] == true) {
+						willBeDead(i, j);
+					} else {
+						willBeAlive(i, j);
+					}
 
-				if (board[i][j] == true) {
-					willBeDead(i, j);
-				} else {
-					willBeAlive(i, j);
 				}
 
 			}
+			board = nextBoard;
 
+			nextBoard = new boolean[dim][dim];
+			
+			iterationCounter++;
+			x--;
 		}
-		board = nextBoard;
-		//nextBoard = new boolean[dim][dim];
-		writeToFile(board);
-		x--;}
-		
 
 	}
 
-	private static void drawConsoleBoard() {
+	private static void drawConsoleBoard(boolean[][] board) {
 
 		for (int i = 0; i < board.length; i++) {
 
@@ -136,49 +145,58 @@ public class Game implements KeyListener {
 
 	private static void willBeDead(int i, int j) {
 		int counter = 0;
+
 		if ((i > 0) && (board[i - 1][j] == true))
 			counter++;
 		if (j > 0 && board[i][j - 1] == true)
 			counter++;
-		if ((i > 0) && (j > 0) && board[i - 1][j - 1] == true)
+		if (((i > 0) && (j > 0)) && board[i - 1][j - 1] == true)
 			counter++;
 		if (i < dim - 1 && board[i + 1][j] == true)
 			counter++;
 		if (j < dim - 1 && board[i][j + 1] == true)
 			counter++;
-		if ((i < dim - 1) && (j < dim - 1) && board[i + 1][j + 1] == true)
+		if (((i < dim - 1) && (j < dim - 1)) && board[i + 1][j + 1] == true)
 			counter++;
-		if ((i < dim - 1) && (j > 0) && board[i + 1][j - 1] == true)
+		if (((i < dim - 1) && (j > 0)) && board[i + 1][j - 1] == true)
 			counter++;
-		if (i > 0 && j < dim - 1 && board[i - 1][j + 1] == true)
+		if ((i > 0 && j < dim - 1) && board[i - 1][j + 1] == true)
 			counter++;
-		if (counter != 2 || counter != 3)
+		// if(i==3 &&j==3)
+		// System.out.println("dead: " +counter);
+
+		if (counter < 2 || counter > 3)
 			nextBoard[i][j] = false;
+		else
+			nextBoard[i][j] = board[i][j];
 
 	}
 
 	private static void willBeAlive(int i, int j) {
 
 		int counter = 0;
-
 		if ((i > 0) && (board[i - 1][j] == true))
 			counter++;
 		if (j > 0 && board[i][j - 1] == true)
 			counter++;
-		if ((i > 0) && (j > 0) && board[i - 1][j - 1] == true)
+		if (((i > 0) && (j > 0)) && board[i - 1][j - 1] == true)
 			counter++;
 		if (i < dim - 1 && board[i + 1][j] == true)
 			counter++;
 		if (j < dim - 1 && board[i][j + 1] == true)
 			counter++;
-		if ((i < dim - 1) && (j < dim - 1) && board[i + 1][j + 1] == true)
+		if (((i < dim - 1) && (j < dim - 1)) && board[i + 1][j + 1] == true)
 			counter++;
-		if ((i < dim - 1) && (j > 0) && board[i + 1][j - 1] == true)
+		if (((i < dim - 1) && (j > 0)) && board[i + 1][j - 1] == true)
 			counter++;
-		if (i > 0 && j < dim - 1 && board[i - 1][j + 1] == true)
+		if ((i > 0 && j < dim - 1) && board[i - 1][j + 1] == true)
 			counter++;
-		if (counter == 3)
+		// System.out.println("alive: "+counter);
+
+		if (counter == 3) 
 			nextBoard[i][j] = true;
+			
+		
 
 	}
 
@@ -191,11 +209,9 @@ public class Game implements KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 
-		
-		if(e.getKeyChar() == 'm')
+		if (e.getKeyChar() == 'm')
 			runGame();
-			
-		
+
 	}
 
 	@Override
