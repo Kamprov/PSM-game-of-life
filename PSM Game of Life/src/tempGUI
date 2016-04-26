@@ -221,96 +221,91 @@ import javax.swing.JPanel;
 //	}
 //}
 
-	public class GUI extends JFrame implements WindowListener{
-		JPanel panelMain;
-		JButton buttonNext, buttonRun;
-		
-		public GUI(){
-			panelMain = new JPanel();
-			buttonNext = new JButton("Next");
-			buttonRun = new JButton("Run");
-			
-			panelMain.add(buttonNext);
-//			panelMain.add(buttonRun);
-			
-			//listeners
-			
-			buttonNext.addActionListener(new ActionListener(){
+public class GUI extends JFrame implements WindowListener {
+	JPanel panelMain;
+	JButton buttonNext, buttonRun;
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					Game.runGame();
-				}
-				
-			});
-			
-			buttonRun.addActionListener(new ActionListener(){
+	public GUI() {
+		panelMain = new JPanel();
+		buttonNext = new JButton("Next");
+		buttonRun = new JButton("Run");
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					Game.setRunning();
-					Game.runGame();
-				}
-				
-			});
-			//
-			
-			addWindowListener(this);
-			setContentPane(panelMain);
-			setVisible(true);
-			pack();
-			setSize(275, 75);
-			setTitle("Game of Life");
-			setDefaultCloseOperation(EXIT_ON_CLOSE);
-			setLocationRelativeTo(null);
-		}
+		panelMain.add(buttonNext);
+		// panelMain.add(buttonRun);
 
-		@Override
-		public void windowActivated(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
+		// listeners
 
-		@Override
-		public void windowClosed(WindowEvent e) {
+		buttonNext.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Game.runGame();
+			}
 
-			System.out.println("ddd");
-			
-		}
+		});
 
-		@Override
-		public void windowClosing(WindowEvent e) {
+		buttonRun.addActionListener(new ActionListener() {
 
-			Game.checkLoops();
-			
-		}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Game.setRunning();
+				Game.runGame();
+			}
 
-		@Override
-		public void windowDeactivated(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
+		});
+		//
 
-		@Override
-		public void windowDeiconified(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void windowIconified(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void windowOpened(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
+		addWindowListener(this);
+		setContentPane(panelMain);
+		setVisible(true);
+		pack();
+		setSize(275, 75);
+		setTitle("Game of Life");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 	}
-	
 
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
 
+	}
 
+	@Override
+	public void windowClosed(WindowEvent e) {
+
+		System.out.println("ddd");
+
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+
+		Game.checkLoops();
+
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+}
