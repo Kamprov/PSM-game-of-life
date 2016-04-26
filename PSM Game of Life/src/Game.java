@@ -50,11 +50,10 @@ public class Game implements Runnable {
 		//
 
 		JOptionPane.showMessageDialog(null, "            Game of Life. \n \n"
-									+ "                      by \n \n"
-									+ "       Aleksander Bartos \n"
-									+ " 	  Andrzej Niewiadomski \n"
-									+ "         Marcin Derlatka");
-										
+				+ "                      by \n \n"
+				+ "       Aleksander Bartos \n" + " 	  Andrzej Niewiadomski \n"
+				+ "         Marcin Derlatka");
+
 		runGame();
 	}
 
