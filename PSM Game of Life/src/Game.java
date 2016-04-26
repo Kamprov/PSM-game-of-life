@@ -1,24 +1,15 @@
-import java.awt.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.*;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
-public class Game implements KeyListener, Runnable {
+public class Game implements Runnable {
 	private static Game instance;
 	private static boolean board[][];
 	private static boolean nextBoard[][];
@@ -27,15 +18,14 @@ public class Game implements KeyListener, Runnable {
 	public static int iterationCounter = 1;
 	public static boolean running = false;
 
-	// JFrame frameMain;
-	// JPanel panelMain;
-	// JButton buttonNext, buttonRun;
-
 	private Game(String fileName, int sizeOfBoard) {
 		dim = sizeOfBoard;
 		board = readFromFile(fileName);
 		resultFile = new File("Result.txt");
 		nextBoard = readFromFile(fileName);
+	}
+
+	public Game() {
 	}
 
 	public static void setRunning() {
@@ -45,11 +35,26 @@ public class Game implements KeyListener, Runnable {
 			running = true;
 	}
 
-	//Dodac zerowanie pliku result.txt
 	public static void init(String fileName, int dim) {
 		if (instance == null)
 			instance = new Game(fileName, dim);
 
+		// Czyszczenie Result.txt
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter("Result.txt");
+			writer.print("");
+			writer.close();
+		} catch (FileNotFoundException e) {
+		}
+		//
+
+		JOptionPane.showMessageDialog(null, "            Game of Life. \n \n"
+									+ "                      by \n \n"
+									+ "       Aleksander Bartos \n"
+									+ " 	  Andrzej Niewiadomski \n"
+									+ "         Marcin Derlatka");
+										
 		runGame();
 	}
 
@@ -71,7 +76,8 @@ public class Game implements KeyListener, Runnable {
 				counter++;
 			}
 		} catch (FileNotFoundException e) {
-			new JOptionPane().showMessageDialog(null, "File not found!");
+			new JOptionPane();
+			JOptionPane.showMessageDialog(null, "File not found!");
 		}
 		return newBoard;
 	}
@@ -112,17 +118,8 @@ public class Game implements KeyListener, Runnable {
 
 	}
 
-	private static boolean[][] nextIter() {
-
-		return null;
-	}
-
 	public static void runGame() {
 
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//		}
 		writeToFile(board);
 		System.out.println("Iteration number: " + iterationCounter);
 		drawConsoleBoard(board);
@@ -218,90 +215,63 @@ public class Game implements KeyListener, Runnable {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-
-		if (e.getKeyChar() == 'm')
-			runGame();
-
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		init("default.txt", 10);
 	}
 
-	public Game() {
-
-	}
-	
 	public static void checkLoops() {
-		
+
 		File myFile = new File("result.txt");
 		String fileContent = "";
 		try {
 			Scanner sc = new Scanner(myFile);
-			
-			while(sc.hasNextLine()) {
-				
+
+			while (sc.hasNextLine()) {
+
 				fileContent += sc.nextLine();
 			}
-			
+			sc.close(); // nie wiem czy potrzebne
 		} catch (FileNotFoundException e) {
-			new JOptionPane().showMessageDialog(null, "File not found!");
+			new JOptionPane();
+			JOptionPane.showMessageDialog(null, "File not found!");
 		}
-		
+
 		fileContent = fileContent.replaceAll("Iteration number", "");
-		
-		String[] iterations = fileContent.replaceAll("//s*", "").split("[0-9]+");
-		
-		
+
+		String[] iterations = fileContent.replaceAll("//s*", "")
+				.split("[0-9]+");
+
 		boolean isLooped = false;
 		String matched = "";
-		
-		duza:for (int i = 2; i < iterations.length; i++) {
-			
+
+		duza: for (int i = 2; i < iterations.length; i++) {
+
 			System.out.println("iter i:" + iterations[i]);
 			Pattern pattern = Pattern.compile(iterations[i]);
 			Matcher match = pattern.matcher(fileContent);
-			
-			while(match.find()) {
-				
+
+			while (match.find()) {
+
 				isLooped = true;
 				System.out.println(iterations[i]);
 				matched = iterations[i];
 				break duza;
 			}
 		}
-		
+
 		System.out.println(isLooped);
-		
-		
-		if(isLooped) {
-			
+
+		if (isLooped) {
+
 			System.out.println("Zapetlenie" + matched);
 		}
-		
-		
-		
+
 		for (int i = 0; i < iterations.length; i++) {
-			
-			if(iterations[i].replaceAll("//s*", "").equals(matched))
+
+			if (iterations[i].replaceAll("//s*", "").equals(matched))
 				System.out.println("            " + i);
 		}
-		
+
 		System.out.println();
 		System.out.println(fileContent);
 	}
