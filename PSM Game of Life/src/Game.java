@@ -47,7 +47,6 @@ public class Game implements Runnable {
 			writer.close();
 		} catch (FileNotFoundException e) {
 		}
-		//
 
 		JOptionPane.showMessageDialog(null, "            Game of Life. \n \n"
 				+ "                      by \n \n"
