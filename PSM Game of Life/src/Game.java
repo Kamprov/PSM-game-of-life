@@ -226,7 +226,7 @@ public class Game implements Runnable {
 
 			while (sc.hasNextLine()) {
 
-				fileContent += sc.nextLine();
+				fileContent += sc.nextLine() + "\n";
 			}
 			sc.close(); 
 		} catch (FileNotFoundException e) {
@@ -234,46 +234,59 @@ public class Game implements Runnable {
 			JOptionPane.showMessageDialog(null, "File not found!");
 		}
 
+		String dotsSplitter = "";
+		
+		for(int i = 0; i < dim; i++)
+			dotsSplitter += ".";
+			
 		fileContent = fileContent.replaceAll("Iteration number", "");
-
-		String[] iterations = fileContent.replaceAll("//s*", "")
-				.split("[0-9]+");
-
+		fileContent = fileContent.replaceAll("\\s", "");
+		String[] iterations = fileContent.split("[0-9]+");
+		
 		boolean isLooped = false;
 		String matched = "";
-
-		duza: for (int i = 2; i < iterations.length; i++) {
-
-//			System.out.println("iter i:" + iterations[i]);
+		int matchedIndex = 0;
+		
+		mainloop: for (int i = 1; i < iterations.length; i++) {
+			
 			Pattern pattern = Pattern.compile(iterations[i]);
 			Matcher match = pattern.matcher(fileContent);
-
-			while (match.find()) {
-
+			int matcherCount = 0;
+			
+			while(match.find()) 
+				matcherCount++;
+			
+			if(matcherCount > 1) {
 				isLooped = true;
-//				System.out.println(iterations[i]);
 				matched = iterations[i];
-				break duza;
+				matchedIndex = i;
+				break mainloop;
 			}
 		}
-
-//		System.out.println(isLooped);
-		if(isLooped)
-		System.out.println("Zepętlenie");
-
-		if (isLooped) {
-
-//			System.out.println("Zapetlenie" + matched);
+		
+		int nextMatchIndex = 0;
+		
+		for (int i = matchedIndex+1; i < iterations.length; i++) {
+			
+			if(iterations[i].equals(matched)){
+				nextMatchIndex = i;
+				break;
+			}
 		}
-
-		for (int i = 0; i < iterations.length; i++) {
-
-			if (iterations[i].replaceAll("//s*", "").equals(matched));
-//				System.out.println("            " + i)
+		
+		if(isLooped) {
+			System.out.println("Jest zapetlenie ");
+			System.out.println("Zaczyna sie od iteracji numer " + matchedIndex +", ktora wyglada tak: ");
+			String[] printMatched = matched.split("(?<=\\G" + dotsSplitter +")");
+			
+			for (int i = 0; i < printMatched.length; i++) {
+				System.out.println(printMatched[i].replaceAll(".(?=.)", "$0 "));
+			}
+			
+			System.out.println("Zapetlenie powtarza sie co " + (nextMatchIndex-matchedIndex) + " iteracje");
 		}
-
-//		System.out.println();
-//		System.out.println(fileContent);
+		else
+			System.out.println("Brak zapetlenia");
 	}
 
 }
