@@ -228,7 +228,7 @@ public class Game implements Runnable {
 
 				fileContent += sc.nextLine();
 			}
-			sc.close(); // nie wiem czy potrzebne
+			sc.close(); 
 		} catch (FileNotFoundException e) {
 			new JOptionPane();
 			JOptionPane.showMessageDialog(null, "File not found!");
@@ -244,34 +244,36 @@ public class Game implements Runnable {
 
 		duza: for (int i = 2; i < iterations.length; i++) {
 
-			System.out.println("iter i:" + iterations[i]);
+//			System.out.println("iter i:" + iterations[i]);
 			Pattern pattern = Pattern.compile(iterations[i]);
 			Matcher match = pattern.matcher(fileContent);
 
 			while (match.find()) {
 
 				isLooped = true;
-				System.out.println(iterations[i]);
+//				System.out.println(iterations[i]);
 				matched = iterations[i];
 				break duza;
 			}
 		}
 
-		System.out.println(isLooped);
+//		System.out.println(isLooped);
+		if(isLooped)
+		System.out.println("Zepętlenie");
 
 		if (isLooped) {
 
-			System.out.println("Zapetlenie" + matched);
+//			System.out.println("Zapetlenie" + matched);
 		}
 
 		for (int i = 0; i < iterations.length; i++) {
 
-			if (iterations[i].replaceAll("//s*", "").equals(matched))
-				System.out.println("            " + i);
+			if (iterations[i].replaceAll("//s*", "").equals(matched));
+//				System.out.println("            " + i)
 		}
 
-		System.out.println();
-		System.out.println(fileContent);
+//		System.out.println();
+//		System.out.println(fileContent);
 	}
 
 }
